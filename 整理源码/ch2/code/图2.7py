@@ -1,0 +1,49 @@
+import pandas as pd
+import matplotlib
+
+matplotlib.use("TkAgg")
+import matplotlib.pyplot as plt
+import numpy as np
+
+# 读取 Excel 文件
+df = pd.read_excel(r"C:\Users\x8615\Desktop\乱七八糟的文件\比赛\大计赛\第三章数据集\图3.6：数据来源中商情报网.xlsx")
+
+# 设置图片清晰度
+plt.rcParams['figure.dpi'] = 300
+
+# 设置中文字体（使用黑体）
+plt.rcParams['font.sans-serif'] = ['SimHei']
+plt.rcParams['axes.unicode_minus'] = False
+
+# 获取年份和市场规模数据
+years = df['年份'].tolist()
+market_sizes = df['市场规模（亿元）'].tolist()
+
+# 计算角度，将圆周等分为与数据点数量相同的份数
+angles = np.linspace(0, 2 * np.pi, len(years), endpoint=False)
+
+# 定义不同的颜色列表
+colors = plt.cm.viridis(np.linspace(0, 1, len(years)))
+
+# 创建极坐标图
+fig = plt.figure(figsize=(10, 6))
+ax = fig.add_subplot(111, polar=True)
+
+# 绘制玫瑰图（极坐标下的柱状图），使用不同颜色
+bars = ax.bar(angles, market_sizes, width=2 * np.pi / len(years), color=colors, alpha=0.5)
+
+# 设置极坐标图的角度标签（年份）
+ax.set_thetagrids(np.degrees(angles), labels=[f'{year}E' if year == 2024 else f'{year}' for year in years],
+                   color='black')
+
+# 设置网格线透明度，将alpha设为0表示完全透明
+ax.grid(True, alpha=0.2)
+
+# 去除半径方向的刻度标签
+ax.set_yticklabels([])
+
+# 添加标题，将标题颜色改为黑色
+plt.title('2018 - 2024年中国智慧交通市场规模预测趋势', color='black')
+
+# 显示图形
+plt.show()
